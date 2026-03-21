@@ -1,0 +1,56 @@
+# Enable rewrite engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Set the base for rewrites
+    RewriteBase /
+    
+    # Prevent direct access to sensitive files
+    <Files ~ "^\.">
+        Order allow,deny
+        Deny from all
+    </Files>
+    
+    <FilesMatch "\.(sqlite|sqlite3|db)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    
+    # Disable directory browsing
+    Options -Indexes
+    
+    # Redirect /admin to admin.php
+    RewriteRule ^admin/?$ admin.php [L]
+    
+    # Redirect /list to list.php
+    RewriteRule ^list/?$ list.php [L]
+    
+    # Handle static pages (privacy, terms, etc.)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([a-zA-Z0-9-]+)/?$ page.php?slug=$1 [L,QSA]
+    
+    # Handle form URLs
+    RewriteRule ^form/([^/]+)/?$ form.php?slug=$1 [L,QSA]
+    
+    # Handle other clean URLs if needed
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)$ $1.php [L,QSA]
+</IfModule>
+
+# Additional security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# PHP settings
+<IfModule mod_php.c>
+    php_value upload_max_filesize 5M
+    php_value post_max_size 5M
+    php_flag display_errors off
+    php_flag log_errors on
+</IfModule> 

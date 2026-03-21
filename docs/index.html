@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Question Generator Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <h2>AI Question Generator</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#database">Database Structure</a></li>
+                <li><a href="#api">OpenRouter Integration</a></li>
+                <li><a href="#admin">Admin Panel</a></li>
+                <li><a href="#customization">Customization</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main>
+        <section id="overview">
+            <h1>AI Question Generator</h1>
+            <p>A powerful PHP-based educational tool that uses OpenRouter AI to generate customized questions for educators.</p>
+            
+            <div class="requirements">
+                <h3>System Requirements</h3>
+                <ul>
+                    <li>PHP 7.4 or higher</li>
+                    <li>SQLite3</li>
+                    <li>OpenRouter API Key</li>
+                    <li>Modern web browser</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="features">
+            <h2>Features</h2>
+            <ul>
+                <li>AI-powered question generation using OpenRouter API</li>
+                <li>Multiple question types support (multiple choice, short answer, long answer)</li>
+                <li>Customizable difficulty levels</li>
+                <li>Custom form creation and management</li>
+                <li>Dynamic content management (Hero sections, Features, FAQs, About sections)</li>
+                <li>Responsive modern UI with Bootstrap 5</li>
+                <li>Admin panel for easy management</li>
+                <li>SEO-friendly static pages</li>
+            </ul>
+        </section>
+
+        <section id="installation">
+            <h2>Installation</h2>
+            <ol>
+                <li>Upload all files to your web server</li>
+                <li>Create a copy of <code>.env.example</code> as <code>.env</code></li>
+                <li>Set your OpenRouter API key in the <code>.env</code> file:
+                    <pre><code>OPENROUTER_API_KEY="your-api-key-here"
+OPENROUTER_API_URL="https://openrouter.ai/api/v1/chat/completions"
+AI_MODEL="microsoft/phi-4"
+ADMIN_USERNAME="admin"
+ADMIN_PASSWORD="admin123"</code></pre>
+                </li>
+                <li>Ensure the following directories are writable:
+                    <ul>
+                        <li><code>uploads/</code></li>
+                        <li>Root directory (for SQLite database)</li>
+                    </ul>
+                </li>
+                <li>Access the admin panel at <code>/admin.php</code> using:
+                    <ul>
+                        <li>Username: admin</li>
+                        <li>Password: admin123</li>
+                    </ul>
+                </li>
+            </ol>
+        </section>
+
+        <section id="configuration">
+            <h2>Configuration</h2>
+            <h3>Environment Variables</h3>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Default</th>
+                </tr>
+                <tr>
+                    <td>OPENROUTER_API_KEY</td>
+                    <td>Your OpenRouter API key</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>OPENROUTER_API_URL</td>
+                    <td>OpenRouter API endpoint</td>
+                    <td>https://openrouter.ai/api/v1/chat/completions</td>
+                </tr>
+                <tr>
+                    <td>AI_MODEL</td>
+                    <td>Default AI model to use</td>
+                    <td>microsoft/phi-4</td>
+                </tr>
+                <tr>
+                    <td>ADMIN_USERNAME</td>
+                    <td>Admin panel username</td>
+                    <td>admin</td>
+                </tr>
+                <tr>
+                    <td>ADMIN_PASSWORD</td>
+                    <td>Admin panel password</td>
+                    <td>admin123</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="database">
+            <h2>Database Structure</h2>
+            <p>The application uses SQLite3 with the following tables:</p>
+
+            <h3>settings</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- setting_key (TEXT UNIQUE)
+- setting_value (TEXT)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>custom_forms</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- name (TEXT)
+- description (TEXT)
+- form_fields (TEXT)
+- ai_prompt (TEXT)
+- is_default (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>pages</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- slug (TEXT UNIQUE)
+- title (TEXT)
+- content (TEXT)
+- show_in_footer (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>hero_sections</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- title (TEXT)
+- subtitle (TEXT)
+- button_text (TEXT)
+- button_url (TEXT)
+- is_active (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>features</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- title (TEXT)
+- description (TEXT)
+- icon (TEXT)
+- sort_order (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>faqs</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- question (TEXT)
+- answer (TEXT)
+- sort_order (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+
+            <h3>about_sections</h3>
+            <pre><code>- id (INTEGER PRIMARY KEY)
+- title (TEXT)
+- content (TEXT)
+- is_active (INTEGER)
+- created_at (DATETIME)
+- updated_at (DATETIME)</code></pre>
+        </section>
+
+        <section id="api">
+            <h2>OpenRouter Integration</h2>
+            <p>The application integrates with OpenRouter AI for question generation. The integration is handled through:</p>
+            <ul>
+                <li>Configuration in <code>.env</code> file</li>
+                <li>API calls in <code>generate.php</code></li>
+                <li>Model selection in admin panel</li>
+            </ul>
+
+            <h3>API Usage</h3>
+            <pre><code>// Example API call
+$ch = curl_init('https://openrouter.ai/api/v1/chat/completions');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $api_key,
+    'HTTP-Referer: http://localhost',
+    'Content-Type: application/json'
+]);</code></pre>
+        </section>
+
+        <section id="admin">
+            <h2>Admin Panel</h2>
+            <p>The admin panel (<code>/admin.php</code>) provides the following features:</p>
+            <ul>
+                <li>Site Settings
+                    <ul>
+                        <li>Site title and logo</li>
+                        <li>SEO settings</li>
+                        <li>Primary color</li>
+                        <li>OpenRouter API configuration</li>
+                    </ul>
+                </li>
+                <li>Content Management
+                    <ul>
+                        <li>Hero sections</li>
+                        <li>Features</li>
+                        <li>About sections</li>
+                        <li>FAQs</li>
+                        <li>Static pages</li>
+                    </ul>
+                </li>
+                <li>Form Management
+                    <ul>
+                        <li>Custom form creation</li>
+                        <li>AI prompt customization</li>
+                        <li>Form field configuration</li>
+                    </ul>
+                </li>
+                <li>Security
+                    <ul>
+                        <li>Admin credentials management</li>
+                        <li>Secure authentication</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section id="customization">
+            <h2>Customization</h2>
+            <h3>Themes</h3>
+            <p>The application uses Bootstrap 5 for styling. You can customize the appearance by:</p>
+            <ul>
+                <li>Modifying the primary color in admin panel</li>
+                <li>Editing <code>assets/css/style.css</code></li>
+                <li>Customizing Bootstrap variables</li>
+            </ul>
+
+            <h3>Templates</h3>
+            <p>Key template files:</p>
+            <ul>
+                <li><code>header.php</code> - Site header and navigation</li>
+                <li><code>footer.php</code> - Site footer</li>
+                <li><code>index.php</code> - Homepage layout</li>
+                <li><code>page.php</code> - Static page template</li>
+            </ul>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html> 
